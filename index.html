@@ -1,180 +1,175 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>A Small Surprise ❤️</title>
+<title>Valentine Surprise ❤️</title>
 
 <style>
 body{
-    margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background: linear-gradient(120deg,#ff9a9e,#fad0c4);
-    overflow:hidden;
-    text-align:center;
-    color:white;
+  margin:0;
+  font-family:Arial;
+  text-align:center;
+  overflow:hidden;
+  background:linear-gradient(45deg,#ff4e88,#ff8fab,#ffc2d1);
+  color:white;
 }
 
-h1{
-    margin-top:60px;
-    font-size:32px;
+/* card */
+.card{
+  margin-top:20vh;
+  padding:20px;
 }
 
+/* buttons */
 button{
-    padding:18px 35px;
-    border:none;
-    border-radius:40px;
-    font-size:20px;
-    cursor:pointer;
+  padding:15px 25px;
+  font-size:20px;
+  border:none;
+  border-radius:10px;
+  margin:10px;
+  cursor:pointer;
+}
+#yes{background:#00ff9d;}
+#no{background:#ff3c3c;color:white;}
+
+/* floating photos */
+.floatPhoto{
+  position:fixed;
+  width:90px;
+  border-radius:12px;
+  top:-100px;
+  animation:fallPhoto 8s linear forwards;
+}
+@keyframes fallPhoto{
+  to{ transform:translateY(120vh) rotate(360deg); }
 }
 
-#yesBtn{
-    background:#00c853;
-    position:fixed;
-    bottom:80px;
-    left:50%;
-    transform:translateX(-50%);
+/* confetti hearts */
+.confetti{
+  position:fixed;
+  top:-20px;
+  font-size:22px;
+  animation:fall 3s linear forwards;
+}
+@keyframes fall{
+  to{ transform:translateY(110vh) rotate(360deg); opacity:0; }
 }
 
-#noBtn{
-    background:#ff1744;
-    position:absolute;
+/* gifts */
+.gifts{
+  position:fixed;
+  bottom:30px;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  gap:25px;
+}
+.gift{
+  font-size:60px;
+  cursor:pointer;
+  background:white;
+  color:black;
+  border-radius:15px;
+  padding:15px;
+  width:90px;
+  height:90px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.gift p{
+  font-size:12px;
 }
 
-#message{
-    margin-top:20px;
-    font-size:22px;
-}
-
-.gallery{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    pointer-events:none;
-}
-
-.photo{
-    position:absolute;
-    width:90px;
-    border-radius:15px;
-    animation:float 10s linear infinite;
-}
-
-@keyframes float{
-    from{transform:translateY(100vh);}
-    to{transform:translateY(-10vh);}
-}
-
-.hiddenBox{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:#000000e6;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    font-size:28px;
-    padding:20px;
-}
 </style>
 </head>
 
 <body>
 
-<h1>Do you love me? ❤️</h1>
-<div id="message"></div>
+<div class="card">
+  <h1>Will You Be My Valentine? ❤️</h1>
+  <button id="yes">YES</button>
+  <button id="no">NO</button>
+  <div id="message"></div>
+</div>
 
-<button id="yesBtn">YES ❤️</button>
-<button id="noBtn">NO 😢</button>
-
-<div class="gallery" id="gallery"></div>
-<div class="hiddenBox" id="secretBox"></div>
+<div id="gallery"></div>
 
 <script>
+const yesBtn=document.getElementById("yes");
+const noBtn=document.getElementById("no");
+const msg=document.getElementById("message");
+const gallery=document.getElementById("gallery");
 
-// ========== RUNNING NO BUTTON ==========
-const noBtn = document.getElementById("noBtn");
-const messages = [
-"Think again 😜",
-"Are you sure?",
-"गलत button दबा दिया 😏",
-"Phir se try karo",
-"System error 😆",
-"दिल से सोचो ❤️",
-"Ye allowed nahi hai 😂",
-"Retry karo",
-"गलत फैसला 😭"
+/* NO BUTTON RUNS AWAY */
+const noMessages=[
+"No",
+"Are you sure Nikki? 🥺",
+"Really sure baby?",
+"mera dil mat todo 💔",
+"Pleease maan jao",
+"Ab toh YES bol do 🥰"
 ];
+let noIndex=0;
 
-noBtn.addEventListener("mouseover", moveButton);
-noBtn.addEventListener("click", moveButton);
+function moveNo(){
+  noBtn.style.position="absolute";
+  noBtn.style.left=Math.random()*80+"vw";
+  noBtn.style.top=Math.random()*80+"vh";
+  noIndex=(noIndex+1)%noMessages.length;
+  noBtn.innerText=noMessages[noIndex];
+}
+document.addEventListener("mousemove",moveNo);
+document.addEventListener("touchstart",moveNo);
 
-function moveButton(){
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 100);
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+/* FLOATING PHOTO GALLERY */
+const photos=["p1.jpeg","p2.jpeg","p3.jpeg","p4.jpeg","p5.jpeg"];
+setInterval(()=>{
+  const img=document.createElement("img");
+  img.src=photos[Math.floor(Math.random()*photos.length)];
+  img.className="floatPhoto";
+  img.style.left=Math.random()*100+"vw";
+  gallery.appendChild(img);
+  setTimeout(()=>img.remove(),8000);
+},2500);
 
-    const msg = messages[Math.floor(Math.random()*messages.length)];
-    document.getElementById("message").innerText = msg;
+/* YES CLICK MAGIC */
+yesBtn.onclick=()=>{
+  if(navigator.vibrate){
+    navigator.vibrate([200,100,200,100,300]);
+  }
+
+  new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3").play();
+
+  for(let i=0;i<80;i++){
+    const conf=document.createElement("div");
+    conf.innerHTML="💖";
+    conf.className="confetti";
+    conf.style.left=Math.random()*100+"vw";
+    document.body.appendChild(conf);
+  }
+
+  msg.innerHTML="<h1>I KNEW YOU LOVE ME ❤️</h1>";
+  setTimeout(showGifts,1500);
+};
+
+/* GIFT BOXES */
+function showGifts(){
+  const giftBox=document.createElement("div");
+  giftBox.className="gifts";
+  giftBox.innerHTML=`
+   <div class="gift" onclick="openGift(this,'Tum meri life ka best decision ho ❤️')">🎁</div>
+   <div class="gift" onclick="openGift(this,'Har din tumhare saath special hai 💕')">🎁</div>
+   <div class="gift" onclick="openGift(this,'Forever tumhara hi rahunga 😘')">🎁</div>
+  `;
+  document.body.appendChild(giftBox);
 }
 
-// ========== YES BUTTON SURPRISE ==========
-document.getElementById("yesBtn").onclick = ()=>{
-    document.getElementById("secretBox").style.display="flex";
-    typeLoveMessage();
-    heartsExplosion();
+function openGift(el,text){
+  el.innerHTML="<p>"+text+"</p>";
 }
-
-// typing effect
-function typeLoveMessage(){
-    const text = "I knew it ❤️ You just made my day special.";
-    let i=0;
-    const box=document.getElementById("secretBox");
-    box.innerHTML="";
-
-    const interval=setInterval(()=>{
-        box.innerHTML += text[i];
-        i++;
-        if(i>=text.length) clearInterval(interval);
-    },50);
-}
-
-// hearts explosion
-function heartsExplosion(){
-    for(let i=0;i<30;i++){
-        const heart=document.createElement("div");
-        heart.innerHTML="❤️";
-        heart.style.position="fixed";
-        heart.style.left=Math.random()*100+"vw";
-        heart.style.top="100vh";
-        heart.style.fontSize=(20+Math.random()*30)+"px";
-        heart.style.animation="float 6s linear forwards";
-        document.body.appendChild(heart);
-    }
-}
-
-// ========== FLOATING PHOTO GALLERY ==========
-const gallery = document.getElementById("gallery");
-
-// 👉 Yaha apni photos add karna (GitHub repo me upload karke naam likhna)
-const photos = [
-"pic1.jpg","pic2.jpg","pic3.jpg","pic4.jpg","pic5.jpg"
-];
-
-photos.forEach(src=>{
-    const img=document.createElement("img");
-    img.src=src;
-    img.className="photo";
-    img.style.left=Math.random()*100+"vw";
-    img.style.animationDuration=(8+Math.random()*8)+"s";
-    gallery.appendChild(img);
-});
-
 </script>
+
 </body>
 </html>
