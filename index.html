@@ -48,6 +48,20 @@ button{
   to{ transform:translateY(110vh) rotate(360deg); opacity:0; }
 }
 
+#poemBox{
+  max-width:320px;
+  margin:20px auto;
+  font-size:18px;
+  line-height:1.6;
+  min-height:150px;
+}
+
+#loveGifBox img{
+  width:160px;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
+
 .gifts{
   position:fixed;
   bottom:30px;
@@ -80,6 +94,8 @@ button{
   <button id="yes">YES</button>
   <button id="no">NO</button>
   <div id="message"></div>
+  <div id="loveGifBox"></div>
+  <div id="poemBox"></div>
 </div>
 
 <div id="gallery"></div>
@@ -88,28 +104,26 @@ button{
 const yesBtn=document.getElementById("yes");
 const noBtn=document.getElementById("no");
 const msg=document.getElementById("message");
+const poemBox=document.getElementById("poemBox");
+const loveGifBox=document.getElementById("loveGifBox");
 const gallery=document.getElementById("gallery");
 
 let accepted=false;
 
-/* NO BUTTON RUNS AWAY */
+/* NO BUTTON RUN */
 const noMessages=[
-"No",
-"Are you sure? 🥺",
-"Really sure baby?",
-"mera dil mat todo 💔",
-"Pleease maan jao",
-"Ab toh YES bol do 🥰"
+"No","Are you sure Nikki? 🥺","Really sure baby?",
+"mera dil mat todo 💔","Pleease maan jao","Ab toh YES bol do 🥰"
 ];
 let noIndex=0;
 
 function moveNo(){
-  if(accepted) return;
-  noBtn.style.position="absolute";
-  noBtn.style.left=Math.random()*80+"vw";
-  noBtn.style.top=Math.random()*80+"vh";
-  noIndex=(noIndex+1)%noMessages.length;
-  noBtn.innerText=noMessages[noIndex];
+ if(accepted) return;
+ noBtn.style.position="absolute";
+ noBtn.style.left=Math.random()*80+"vw";
+ noBtn.style.top=Math.random()*80+"vh";
+ noIndex=(noIndex+1)%noMessages.length;
+ noBtn.innerText=noMessages[noIndex];
 }
 document.addEventListener("mousemove",moveNo);
 document.addEventListener("touchstart",moveNo);
@@ -117,55 +131,82 @@ document.addEventListener("touchstart",moveNo);
 /* FLOATING PHOTO GALLERY */
 const photos=["p1.jpeg","p2.jpeg","p3.jpeg","p4.jpeg","p5.jpeg"];
 setInterval(()=>{
-  const img=document.createElement("img");
-  img.src=photos[Math.floor(Math.random()*photos.length)];
-  img.className="floatPhoto";
-  img.style.left=Math.random()*100+"vw";
-  gallery.appendChild(img);
-  setTimeout(()=>img.remove(),8000);
+ const img=document.createElement("img");
+ img.src=photos[Math.floor(Math.random()*photos.length)];
+ img.className="floatPhoto";
+ img.style.left=Math.random()*100+"vw";
+ gallery.appendChild(img);
+ setTimeout(()=>img.remove(),8000);
 },2500);
+
+/* TYPEWRITER NAZAM */
+const poem=`Tum meri zindagi ka wo hissa ho
+jo kabhi plan nahi tha,
+par sabse khoobsurat ban gaya.
+
+Tumhari hasi mere din ka shortcut happiness hai.
+
+Agar duniya ek safar hai,
+toh tum meri favourite destination ho.
+
+Aur agar mohabbat ek decision hai,
+toh main har roz tumhe hi choose karta hoon. ❤️`;
+
+function typeWriter(){
+ let i=0;
+ function typing(){
+   if(i<poem.length){
+     poemBox.innerHTML+=poem.charAt(i);
+     i++;
+     setTimeout(typing,40);
+     poemBox.scrollTop=poemBox.scrollHeight;
+   }
+ }
+ typing();
+}
 
 /* YES CLICK MAGIC */
 yesBtn.onclick=()=>{
-  accepted=true;
+ accepted=true;
 
-  noBtn.style.display="none";
-  document.removeEventListener("mousemove",moveNo);
-  document.removeEventListener("touchstart",moveNo);
+ noBtn.style.display="none";
+ document.removeEventListener("mousemove",moveNo);
+ document.removeEventListener("touchstart",moveNo);
 
-  if(navigator.vibrate){
-    navigator.vibrate([200,100,200,100,300]);
-  }
+ if(navigator.vibrate){
+   navigator.vibrate([300,100,300,100,500]);
+ }
 
-  new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3").play();
+ new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3").play();
 
-  for(let i=0;i<80;i++){
-    const conf=document.createElement("div");
-    conf.innerHTML="💖";
-    conf.className="confetti";
-    conf.style.left=Math.random()*100+"vw";
-    document.body.appendChild(conf);
-  }
+ for(let i=0;i<80;i++){
+  const conf=document.createElement("div");
+  conf.innerHTML="💖";
+  conf.className="confetti";
+  conf.style.left=Math.random()*100+"vw";
+  document.body.appendChild(conf);
+ }
 
-  msg.innerHTML="<h1>I KNEW YOU LOVE ME ❤️</h1>";
-  setTimeout(showGifts,1500);
+ loveGifBox.innerHTML =
+ '<img src="https://media.tenor.com/97y_7S6y_S8AAAAi/bears-with-hearts-love.gif">';
+
+ msg.innerHTML="<h1>I KNEW YOU LOVE ME ❤️</h1>";
+ typeWriter();
+ setTimeout(showGifts,7000);
 };
 
 /* GIFT BOXES */
 function showGifts(){
-  const giftBox=document.createElement("div");
-  giftBox.className="gifts";
-  giftBox.innerHTML=`
-   <div class="gift" onclick="openGift(this,'Tum meri life ka best decision ho ❤️')">🎁</div>
-   <div class="gift" onclick="openGift(this,'Har din tumhare saath special hai 💕')">🎁</div>
-   <div class="gift" onclick="openGift(this,'Forever tumhara hi rahunga 😘')">🎁</div>
-  `;
-  document.body.appendChild(giftBox);
+ const giftBox=document.createElement("div");
+ giftBox.className="gifts";
+ giftBox.innerHTML=`
+  <div class="gift" onclick="openGift(this,'Tum meri life ka best decision ho ❤️')">🎁</div>
+  <div class="gift" onclick="openGift(this,'Har din tumhare saath special hai 💕')">🎁</div>
+  <div class="gift" onclick="openGift(this,'Forever tumhara hi rahunga 😘')">🎁</div>
+ `;
+ document.body.appendChild(giftBox);
 }
-
-function openGift(el,text){
-  el.innerHTML="<p>"+text+"</p>";
-}
+function openGift(el,text){ el.innerHTML="<p>"+text+"</p>"; }
 </script>
 
 </body>
