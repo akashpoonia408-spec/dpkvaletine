@@ -34,9 +34,7 @@ button{
   top:-100px;
   animation:fallPhoto 8s linear forwards;
 }
-@keyframes fallPhoto{
-  to{ transform:translateY(120vh) rotate(360deg); }
-}
+@keyframes fallPhoto{ to{ transform:translateY(120vh) rotate(360deg);} }
 
 .confetti{
   position:fixed;
@@ -44,9 +42,7 @@ button{
   font-size:22px;
   animation:fall 3s linear forwards;
 }
-@keyframes fall{
-  to{ transform:translateY(110vh) rotate(360deg); opacity:0; }
-}
+@keyframes fall{ to{ transform:translateY(110vh) rotate(360deg); opacity:0;} }
 
 #poemBox{
   max-width:320px;
@@ -84,6 +80,8 @@ button{
   justify-content:center;
 }
 .gift p{ font-size:12px; }
+
+@keyframes fadeHeart{ to{ transform:translateY(-40px); opacity:0;} }
 </style>
 </head>
 
@@ -110,13 +108,13 @@ const gallery=document.getElementById("gallery");
 
 let accepted=false;
 
-/* NO BUTTON RUN */
-const noMessages=[
-"No","Are you sure Nikki? 🥺","Really sure baby?",
-"mera dil mat todo 💔","Pleease maan jao","Ab toh YES bol do 🥰"
-];
-let noIndex=0;
+/* page load vibration */
+window.onload=()=>{ if(navigator.vibrate) navigator.vibrate(120); }
 
+/* NO button run */
+const noMessages=["No","Are you sure Nikki? 🥺","Really sure baby?",
+"mera dil mat todo 💔","Pleease maan jao","Ab toh YES bol do 🥰"];
+let noIndex=0;
 function moveNo(){
  if(accepted) return;
  noBtn.style.position="absolute";
@@ -128,7 +126,7 @@ function moveNo(){
 document.addEventListener("mousemove",moveNo);
 document.addEventListener("touchstart",moveNo);
 
-/* FLOATING PHOTOS */
+/* floating photos */
 const photos=["p1.jpeg","p2.jpeg","p3.jpeg","p4.jpeg","p5.jpeg"];
 setInterval(()=>{
  const img=document.createElement("img");
@@ -139,7 +137,34 @@ setInterval(()=>{
  setTimeout(()=>img.remove(),8000);
 },2500);
 
-/* TYPEWRITER NAZAM */
+/* heart cursor trail */
+document.addEventListener("mousemove",createHeart);
+document.addEventListener("touchmove",createHeart);
+function createHeart(e){
+ const heart=document.createElement("div");
+ heart.innerHTML="💖";
+ heart.style.position="fixed";
+ heart.style.left=(e.touches?e.touches[0].clientX:e.clientX)+"px";
+ heart.style.top=(e.touches?e.touches[0].clientY:e.clientY)+"px";
+ heart.style.fontSize="20px";
+ heart.style.animation="fadeHeart 1s linear forwards";
+ document.body.appendChild(heart);
+ setTimeout(()=>heart.remove(),1000);
+}
+
+/* background heart rain */
+setInterval(()=>{
+ const heart=document.createElement("div");
+ heart.innerHTML="❤️";
+ heart.style.position="fixed";
+ heart.style.left=Math.random()*100+"vw";
+ heart.style.top="-20px";
+ heart.style.animation="fall 6s linear forwards";
+ document.body.appendChild(heart);
+ setTimeout(()=>heart.remove(),6000);
+},900);
+
+/* poem */
 const poem=`Tum meri zindagi ka wo hissa ho
 jo kabhi plan nahi tha,
 par sabse khoobsurat ban gaya.
@@ -163,24 +188,30 @@ function typeWriter(){
      poemBox.innerHTML+=poem.charAt(i);
      i++;
      setTimeout(typing,70);
-     poemBox.scrollTop=poemBox.scrollHeight;
    }
  }
  typing();
 }
 
-/* YES CLICK MAGIC */
+/* YES click */
 yesBtn.onclick=()=>{
  accepted=true;
  noBtn.style.display="none";
  document.removeEventListener("mousemove",moveNo);
  document.removeEventListener("touchstart",moveNo);
 
- if(navigator.vibrate){
-   navigator.vibrate([300,100,300,100,500]);
- }
+ if(navigator.vibrate) navigator.vibrate([300,100,300,100,500]);
 
- new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3").play();
+ const flash=document.createElement("div");
+ flash.style.position="fixed";
+ flash.style.top=0; flash.style.left=0;
+ flash.style.width="100%"; flash.style.height="100%";
+ flash.style.background="white"; flash.style.opacity="0.8";
+ document.body.appendChild(flash);
+ setTimeout(()=>flash.remove(),200);
+
+ const music=new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
+ music.loop=true; music.play();
 
  for(let i=0;i<80;i++){
   const conf=document.createElement("div");
@@ -190,23 +221,20 @@ yesBtn.onclick=()=>{
   document.body.appendChild(conf);
  }
 
- loveGifBox.innerHTML =
- '<img src="https://media.tenor.com/97y_7S6y_S8AAAAi/bears-with-hearts-love.gif">';
-
+ loveGifBox.innerHTML='<img src="https://media.tenor.com/97y_7S6y_S8AAAAi/bears-with-hearts-love.gif">';
  msg.innerHTML="<h1>I KNEW YOU LOVE ME ❤️</h1>";
  typeWriter();
  setTimeout(showGifts,7000);
 };
 
-/* GIFTS */
+/* gifts */
 function showGifts(){
  const giftBox=document.createElement("div");
  giftBox.className="gifts";
  giftBox.innerHTML=`
   <div class="gift" onclick="openGift(this,'Tum meri life ka best decision ho ❤️')">🎁</div>
   <div class="gift" onclick="openGift(this,'Har din tumhare saath special hai 💕')">🎁</div>
-  <div class="gift" onclick="openGift(this,'Forever tumhara hi rahunga 😘')">🎁</div>
- `;
+  <div class="gift" onclick="openGift(this,'Forever tumhara hi rahunga 😘')">🎁</div>`;
  document.body.appendChild(giftBox);
 }
 function openGift(el,text){ el.innerHTML="<p>"+text+"</p>"; }
