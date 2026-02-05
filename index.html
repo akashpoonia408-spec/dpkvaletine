@@ -8,13 +8,13 @@
 <style>
 body{
   margin:0;
-  font-family:Arial;
+  font-family: 'Segoe UI', Arial, sans-serif;
   text-align:center;
   overflow:hidden;
   background:linear-gradient(45deg,#ff4e88,#ff8fab,#ffc2d1);
   color:white;
 }
-.card{ margin-top:20vh; padding:20px; }
+.card{ margin-top:15vh; padding:20px; }
 
 button{
   padding:15px 25px;
@@ -23,8 +23,9 @@ button{
   border-radius:10px;
   margin:10px;
   cursor:pointer;
+  transition: 0.3s;
 }
-#yes{background:#00ff9d;}
+#yes{background:#00ff9d; font-weight: bold;}
 #no{background:#ff3c3c;color:white;}
 
 .floatPhoto{
@@ -33,6 +34,7 @@ button{
   border-radius:12px;
   top:-100px;
   animation:fallPhoto 8s linear forwards;
+  z-index: -1;
 }
 @keyframes fallPhoto{
   to{ transform:translateY(120vh) rotate(360deg); }
@@ -51,9 +53,11 @@ button{
 #poemBox{
   max-width:320px;
   margin:20px auto;
-  font-size:18px;
-  line-height:1.6;
-  min-height:150px;
+  font-size:22px; /* Thoda bada kiya hai taaki lines highlight hon */
+  line-height:1.8;
+  min-height:120px;
+  font-weight: bold;
+  white-space: pre-line;
 }
 
 #loveGifBox img{
@@ -68,22 +72,23 @@ button{
   width:100%;
   display:flex;
   justify-content:center;
-  gap:25px;
+  gap:15px;
 }
 .gift{
-  font-size:60px;
+  font-size:40px;
   cursor:pointer;
   background:white;
   color:black;
   border-radius:15px;
-  padding:15px;
-  width:90px;
-  height:90px;
+  padding:10px;
+  width:100px;
+  height:100px;
   display:flex;
   align-items:center;
   justify-content:center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
-.gift p{ font-size:12px; }
+.gift p{ font-size:11px; font-weight: bold; margin: 0; text-align: center; }
 </style>
 </head>
 
@@ -110,9 +115,9 @@ const gallery=document.getElementById("gallery");
 
 let accepted=false;
 
-/* NO BUTTON RUN */
+/* NO BUTTON MESSAGES */
 const noMessages=[
-"No","Are you sure mere chand? 🥺","Really sure baby?",
+"No","Are you sure mere Chand? 🥺","Really sure baby?",
 "mera dil mat todo 💔","Pleease maan jao","Ab toh YES bol do 🥰"
 ];
 let noIndex=0;
@@ -125,8 +130,8 @@ function moveNo(){
  noIndex=(noIndex+1)%noMessages.length;
  noBtn.innerText=noMessages[noIndex];
 }
-document.addEventListener("mousemove",moveNo);
-document.addEventListener("touchstart",moveNo);
+noBtn.addEventListener("mouseover",moveNo);
+noBtn.addEventListener("touchstart",moveNo);
 
 /* FLOATING PHOTOS */
 const photos=["p1.jpeg","p2.jpeg","p3.jpeg","p4.jpeg","p5.jpeg"];
@@ -139,11 +144,10 @@ setInterval(()=>{
  setTimeout(()=>img.remove(),8000);
 },2500);
 
-/* TYPEWRITER NAZAM */
+/* TYPEWRITER NAZAM - FIXED ONLY TO YOUR LINES */
 const poem=`Tum mere chand the,
 tum mere chand ho,
-aur tum mere chand hi rahoge. 🌙
-
+aur tum mere chand hi rahoge. 🌙`;
 
 function typeWriter(){
  let i=0;
@@ -151,8 +155,7 @@ function typeWriter(){
    if(i<poem.length){
      poemBox.innerHTML+=poem.charAt(i);
      i++;
-     setTimeout(typing,70);
-     poemBox.scrollTop=poemBox.scrollHeight;
+     setTimeout(typing,100); // Thoda slow kiya taaki feel aaye
    }
  }
  typing();
@@ -162,9 +165,7 @@ function typeWriter(){
 yesBtn.onclick=()=>{
  accepted=true;
  noBtn.style.display="none";
- document.removeEventListener("mousemove",moveNo);
- document.removeEventListener("touchstart",moveNo);
-
+ 
  if(navigator.vibrate){
    navigator.vibrate([300,100,300,100,500]);
  }
@@ -176,6 +177,7 @@ yesBtn.onclick=()=>{
   conf.innerHTML="💖";
   conf.className="confetti";
   conf.style.left=Math.random()*100+"vw";
+  conf.style.animationDelay=Math.random()*2+"s";
   document.body.appendChild(conf);
  }
 
@@ -184,7 +186,7 @@ yesBtn.onclick=()=>{
 
  msg.innerHTML="<h1>I KNEW YOU LOVE ME ❤️</h1>";
  typeWriter();
- setTimeout(showGifts,7000);
+ setTimeout(showGifts,5000); // 5 sec baad gifts dikhenge
 };
 
 /* GIFTS */
@@ -192,13 +194,16 @@ function showGifts(){
  const giftBox=document.createElement("div");
  giftBox.className="gifts";
  giftBox.innerHTML=`
-  <div class="gift" onclick="openGift(this,'Tum meri life ka best decision ho ❤️')">🎁</div>
-  <div class="gift" onclick="openGift(this,'Har din tumhare saath special hai 💕')">🎁</div>
-  <div class="gift" onclick="openGift(this,'Forever tumhara hi rahunga 😘')">🎁</div>
+  <div class="gift" onclick="openGift(this,'Meri har khushi, sirf tumse. ❤️')">🎁</div>
+  <div class="gift" onclick="openGift(this,'Tum ho, toh sab kuch hai. 💕')">🎁</div>
+  <div class="gift" onclick="openGift(this,'Hamesha mere rehna. 😘')">🎁</div>
  `;
  document.body.appendChild(giftBox);
 }
-function openGift(el,text){ el.innerHTML="<p>"+text+"</p>"; }
+function openGift(el,text){ 
+  el.style.background = "#fff0f3";
+  el.innerHTML="<p>"+text+"</p>"; 
+}
 </script>
 
 </body>
