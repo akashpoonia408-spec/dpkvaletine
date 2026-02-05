@@ -1,139 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For My Love ❤️</title>
+<title>Valentine Surprise ❤️</title>
 
 <style>
 body{
-margin:0;
-font-family: 'Segoe UI', Arial;
-background: radial-gradient(circle,#ff9a9e,#ffdde1);
-color:white;
-text-align:center;
-overflow:hidden;
-cursor:url('https://cur.cursors-4u.net/nature/nat-10/nat927.cur'),auto;
+  margin:0;
+  font-family:Arial;
+  text-align:center;
+  overflow:hidden;
+  background:linear-gradient(45deg,#ff4e88,#ff8fab,#ffc2d1);
+  color:white;
 }
-
-/* floating hearts bg */
-.bgHeart{
-position:fixed;
-color:rgba(255,255,255,0.7);
-animation:float 8s linear infinite;
-font-size:22px;
-}
-@keyframes float{
-0%{transform:translateY(100vh)}
-100%{transform:translateY(-10vh)}
-}
+.card{ margin-top:20vh; padding:20px; }
 
 button{
-padding:15px 30px;
-font-size:20px;
-border:none;
-border-radius:50px;
-margin:15px;
+  padding:15px 25px;
+  font-size:20px;
+  border:none;
+  border-radius:10px;
+  margin:10px;
+  cursor:pointer;
+}
+#yes{background:#00ff9d;}
+#no{background:#ff3c3c;color:white;}
+
+.floatPhoto{
+  position:fixed;
+  width:90px;
+  border-radius:12px;
+  top:-100px;
+  animation:fallPhoto 8s linear forwards;
+}
+@keyframes fallPhoto{
+  to{ transform:translateY(120vh) rotate(360deg); }
 }
 
-#yesBtn{background:#ff2e63;color:white;}
-#noBtn{background:#555;color:white;position:absolute;}
-
-#result{display:none;margin-top:30px;}
-
-.flash{
-position:fixed;
-top:0;left:0;width:100%;height:100%;
-background:white;
-opacity:0;
-pointer-events:none;
+.confetti{
+  position:fixed;
+  top:-20px;
+  font-size:22px;
+  animation:fall 3s linear forwards;
+}
+@keyframes fall{
+  to{ transform:translateY(110vh) rotate(360deg); opacity:0; }
 }
 
-canvas{background:#aaa;border-radius:12px;}
-.scratchWrap{display:flex;justify-content:center;gap:15px;margin-top:25px;}
+#poemBox{
+  max-width:320px;
+  margin:20px auto;
+  font-size:18px;
+  line-height:1.6;
+  min-height:150px;
+}
+
+#loveGifBox img{
+  width:160px;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
+
+.gifts{
+  position:fixed;
+  bottom:30px;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  gap:25px;
+}
+.gift{
+  font-size:60px;
+  cursor:pointer;
+  background:white;
+  color:black;
+  border-radius:15px;
+  padding:15px;
+  width:90px;
+  height:90px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.gift p{ font-size:12px; }
 </style>
 </head>
 
 <body>
 
-<audio autoplay loop>
-<source src="https://cdn.pixabay.com/audio/2022/03/15/audio_7b5a6b1b32.mp3">
-</audio>
-
-<h1>Will you be my Valentine? ❤️</h1>
-<button id="yesBtn">YES 💖</button>
-<button id="noBtn">NO</button>
-
-<div class="flash" id="flash"></div>
-
-<div id="result">
-<h1>I KNEW IT 😍</h1>
-
-<img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" width="220">
-
-<div id="poem" style="margin-top:20px;font-size:18px;"></div>
-
-<div class="scratchWrap">
-<canvas width="120" height="120"></canvas>
-<canvas width="120" height="120"></canvas>
-<canvas width="120" height="120"></canvas>
+<div class="card">
+  <h1>Will You Be My Valentine? ❤️</h1>
+  <button id="yes">YES</button>
+  <button id="no">NO</button>
+  <div id="message"></div>
+  <div id="loveGifBox"></div>
+  <div id="poemBox"></div>
 </div>
-</div>
+
+<div id="gallery"></div>
 
 <script>
-// floating hearts bg
-setInterval(()=>{
-let h=document.createElement("div");
-h.className="bgHeart";
-h.innerText="❤️";
-h.style.left=Math.random()*100+"vw";
-h.style.animationDuration=5+Math.random()*4+"s";
-document.body.appendChild(h);
-setTimeout(()=>h.remove(),8000);
-},500);
+const yesBtn=document.getElementById("yes");
+const noBtn=document.getElementById("no");
+const msg=document.getElementById("message");
+const poemBox=document.getElementById("poemBox");
+const loveGifBox=document.getElementById("loveGifBox");
+const gallery=document.getElementById("gallery");
 
-// NO button run + msg
-const msgs=["No","Are you sure?","Baby please","Mat bolo no","Think again","Last chance 🥺"];
-let i=0;
-const noBtn=document.getElementById("noBtn");
+let accepted=false;
 
-noBtn.onmouseover=noBtn.ontouchstart=()=>{
-noBtn.style.left=Math.random()*80+"vw";
-noBtn.style.top=Math.random()*80+"vh";
-noBtn.innerText=msgs[i++%msgs.length];
-};
+/* NO BUTTON RUN */
+const noMessages=[
+"No","Are you sure Nikki? 🥺","Really sure baby?",
+"mera dil mat todo 💔","Pleease maan jao","Ab toh YES bol do 🥰"
+];
+let noIndex=0;
 
-// YES click magic
-document.getElementById("yesBtn").onclick=()=>{
-document.body.style.cursor="auto";
-
-document.querySelector("h1").style.display="none";
-yesBtn.style.display="none";
-noBtn.style.display="none";
-document.getElementById("result").style.display="block";
-
-// vibration
-navigator.vibrate([300,100,300]);
-
-// flash
-let flash=document.getElementById("flash");
-flash.style.transition="0.8s";
-flash.style.opacity="1";
-setTimeout(()=>flash.style.opacity="0",1200);
-
-// heart rain burst
-for(let i=0;i<40;i++){
-let heart=document.createElement("div");
-heart.innerText="❤️";
-heart.style.position="fixed";
-heart.style.left=Math.random()*100+"vw";
-heart.style.top="-20px";
-heart.style.fontSize="22px";
-heart.style.animation="fall 4s linear";
-document.body.appendChild(heart);
+function moveNo(){
+ if(accepted) return;
+ noBtn.style.position="absolute";
+ noBtn.style.left=Math.random()*80+"vw";
+ noBtn.style.top=Math.random()*80+"vh";
+ noIndex=(noIndex+1)%noMessages.length;
+ noBtn.innerText=noMessages[noIndex];
 }
+document.addEventListener("mousemove",moveNo);
+document.addEventListener("touchstart",moveNo);
 
-// typewriter poem
+/* FLOATING PHOTOS */
+const photos=["p1.jpeg","p2.jpeg","p3.jpeg","p4.jpeg","p5.jpeg"];
+setInterval(()=>{
+ const img=document.createElement("img");
+ img.src=photos[Math.floor(Math.random()*photos.length)];
+ img.className="floatPhoto";
+ img.style.left=Math.random()*100+"vw";
+ gallery.appendChild(img);
+ setTimeout(()=>img.remove(),8000);
+},2500);
+
+/* TYPEWRITER NAZAM */
 const poem=`Tum meri zindagi ka wo hissa ho
 jo kabhi plan nahi tha,
 par sabse khoobsurat ban gaya.
@@ -142,38 +148,68 @@ Tum mere chand the,
 tum mere chand ho,
 aur tum mere chand hi rahoge. 🌙
 
-Main har roz tumhe hi choose karta hoon. ❤️`;
+Tumhari hasi mere din ka shortcut happiness hai.
 
-let j=0;
-function type(){
-if(j<poem.length){
-document.getElementById("poem").innerHTML+=poem.charAt(j);
-j++;
-setTimeout(type,70);
-}}
-type();
+Agar duniya ek safar hai,
+toh tum meri favourite destination ho.
 
-// scratch cards
-const messages=["Forever Together 💍","My Happiness ❤️","My Favourite Person 💖"];
-document.querySelectorAll("canvas").forEach((c,index)=>{
-let ctx=c.getContext("2d");
-ctx.fillStyle="#bbb";
-ctx.fillRect(0,0,120,120);
-ctx.fillStyle="white";
-ctx.font="14px Arial";
-ctx.fillText(messages[index],10,60);
+Aur agar mohabbat ek decision hai,
+toh main har roz tumhe hi choose karta hoon. ❤️`;
 
-c.addEventListener("mousemove",scratch);
-c.addEventListener("touchmove",scratch);
-
-function scratch(e){
-let rect=c.getBoundingClientRect();
-let x=(e.touches?e.touches[0].clientX:e.clientX)-rect.left;
-let y=(e.touches?e.touches[0].clientY:e.clientY)-rect.top;
-ctx.clearRect(x-10,y-10,20,20);
+function typeWriter(){
+ let i=0;
+ function typing(){
+   if(i<poem.length){
+     poemBox.innerHTML+=poem.charAt(i);
+     i++;
+     setTimeout(typing,70);
+     poemBox.scrollTop=poemBox.scrollHeight;
+   }
+ }
+ typing();
 }
-});
+
+/* YES CLICK MAGIC */
+yesBtn.onclick=()=>{
+ accepted=true;
+ noBtn.style.display="none";
+ document.removeEventListener("mousemove",moveNo);
+ document.removeEventListener("touchstart",moveNo);
+
+ if(navigator.vibrate){
+   navigator.vibrate([300,100,300,100,500]);
+ }
+
+ new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3").play();
+
+ for(let i=0;i<80;i++){
+  const conf=document.createElement("div");
+  conf.innerHTML="💖";
+  conf.className="confetti";
+  conf.style.left=Math.random()*100+"vw";
+  document.body.appendChild(conf);
+ }
+
+ loveGifBox.innerHTML =
+ '<img src="https://media.tenor.com/97y_7S6y_S8AAAAi/bears-with-hearts-love.gif">';
+
+ msg.innerHTML="<h1>I KNEW YOU LOVE ME ❤️</h1>";
+ typeWriter();
+ setTimeout(showGifts,7000);
 };
+
+/* GIFTS */
+function showGifts(){
+ const giftBox=document.createElement("div");
+ giftBox.className="gifts";
+ giftBox.innerHTML=`
+  <div class="gift" onclick="openGift(this,'Tum meri life ka best decision ho ❤️')">🎁</div>
+  <div class="gift" onclick="openGift(this,'Har din tumhare saath special hai 💕')">🎁</div>
+  <div class="gift" onclick="openGift(this,'Forever tumhara hi rahunga 😘')">🎁</div>
+ `;
+ document.body.appendChild(giftBox);
+}
+function openGift(el,text){ el.innerHTML="<p>"+text+"</p>"; }
 </script>
 
 </body>
