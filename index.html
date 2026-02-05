@@ -128,7 +128,7 @@ function moveNo(){
 document.addEventListener("mousemove",moveNo);
 document.addEventListener("touchstart",moveNo);
 
-/* FLOATING PHOTO GALLERY */
+/* FLOATING PHOTOS */
 const photos=["p1.jpeg","p2.jpeg","p3.jpeg","p4.jpeg","p5.jpeg"];
 setInterval(()=>{
  const img=document.createElement("img");
@@ -140,10 +140,21 @@ setInterval(()=>{
 },2500);
 
 /* TYPEWRITER NAZAM */
-const poem=`
-tum mere chand the... 
-ho...
-aur rehoge....❤️`;
+const poem=`Tum meri zindagi ka wo hissa ho
+jo kabhi plan nahi tha,
+par sabse khoobsurat ban gaya.
+
+Tum mere chand the,
+tum mere chand ho,
+aur tum mere chand hi rahoge. 🌙
+
+Tumhari hasi mere din ka shortcut happiness hai.
+
+Agar duniya ek safar hai,
+toh tum meri favourite destination ho.
+
+Aur agar mohabbat ek decision hai,
+toh main har roz tumhe hi choose karta hoon. ❤️`;
 
 function typeWriter(){
  let i=0;
@@ -151,7 +162,7 @@ function typeWriter(){
    if(i<poem.length){
      poemBox.innerHTML+=poem.charAt(i);
      i++;
-     setTimeout(typing,40);
+     setTimeout(typing,70);
      poemBox.scrollTop=poemBox.scrollHeight;
    }
  }
@@ -161,7 +172,6 @@ function typeWriter(){
 /* YES CLICK MAGIC */
 yesBtn.onclick=()=>{
  accepted=true;
-
  noBtn.style.display="none";
  document.removeEventListener("mousemove",moveNo);
  document.removeEventListener("touchstart",moveNo);
@@ -188,7 +198,7 @@ yesBtn.onclick=()=>{
  setTimeout(showGifts,7000);
 };
 
-/* GIFT BOXES */
+/* GIFTS */
 function showGifts(){
  const giftBox=document.createElement("div");
  giftBox.className="gifts";
